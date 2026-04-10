@@ -31,16 +31,16 @@ import {
   Moon
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { db } from "@/lib/firebase";
+import { Button } from "./components/ui/button";
+import { Badge } from "./components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
+import { Separator } from "./components/ui/separator";
+import { Input } from "./components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
+import { Label } from "./components/ui/label";
+import { Textarea } from "./components/ui/textarea";
+import { cn } from "./lib/utils";
+import { db } from "./lib/firebase";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 
 const COLORS = [
