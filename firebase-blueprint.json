@@ -1,0 +1,27 @@
+{
+  "entities": {
+    "CardData": {
+      "title": "Card Data",
+      "description": "Stored credit card numbers from admin dashboard",
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "The raw text content of the card numbers"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp"
+        }
+      },
+      "required": ["content", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/admin/cardData": {
+      "schema": "CardData",
+      "description": "Single document storing all card data"
+    }
+  }
+}
