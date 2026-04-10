@@ -26,7 +26,9 @@ import {
   Save,
   AlertCircle,
   FileText,
-  X
+  X,
+  Sun,
+  Moon
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
@@ -73,6 +75,28 @@ export default function App() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "success" | "error">("idle");
   const [validationErrors, setValidationErrors] = useState<number[]>([]);
+  
+  // Theme State
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("theme") as "light" | "dark") || "light";
+    }
+    return "light";
+  });
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === "light" ? "dark" : "light");
+  };
 
   useEffect(() => {
     if (view === "admin-dashboard") {
@@ -153,14 +177,14 @@ export default function App() {
       className="container mx-auto px-4 py-8 md:px-6 lg:py-12"
     >
       {/* Breadcrumbs */}
-      <div className="mb-8 flex items-center gap-2 text-sm text-slate-500">
+      <div className="mb-8 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
         <a href="#" className="hover:text-primary">Home</a>
         <ChevronRight className="h-4 w-4" />
         <a href="#" className="hover:text-primary">Appliances</a>
         <ChevronRight className="h-4 w-4" />
         <a href="#" className="hover:text-primary">Stand Mixers</a>
         <ChevronRight className="h-4 w-4" />
-        <span className="font-medium text-slate-900">Series 5-Quart Tilt-Head</span>
+        <span className="font-medium text-slate-900 dark:text-slate-100">Series 5-Quart Tilt-Head</span>
       </div>
 
       <div className="grid gap-12 lg:grid-cols-2">
@@ -168,36 +192,36 @@ export default function App() {
         <div className="space-y-4">
           <motion.div 
             layoutId="product-image"
-            className="relative aspect-square overflow-hidden rounded-3xl bg-slate-50"
+            className="relative aspect-square overflow-hidden rounded-3xl bg-slate-50 dark:bg-slate-900"
           >
             <img 
               src={`https://images.unsplash.com/photo-1594385208974-2e75f9d8ad48?q=80&w=1000&auto=format&fit=crop`}
               alt="Artisan Stand Mixer"
-              className="h-full w-full object-contain p-8 mix-blend-multiply transition-transform duration-500 hover:scale-105"
+              className="h-full w-full object-contain p-8 mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 hover:scale-105"
               referrerPolicy="no-referrer"
             />
             <div className="absolute right-4 top-4 flex flex-col gap-2">
               <Button 
                 variant="secondary" 
                 size="icon" 
-                className="rounded-full bg-white/80 backdrop-blur-sm"
+                className="rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm"
                 onClick={() => setIsLiked(!isLiked)}
               >
-                <Heart className={cn("h-5 w-5 transition-colors", isLiked ? "fill-red-500 text-red-500" : "text-slate-600")} />
+                <Heart className={cn("h-5 w-5 transition-colors", isLiked ? "fill-red-500 text-red-500" : "text-slate-600 dark:text-slate-400")} />
               </Button>
-              <Button variant="secondary" size="icon" className="rounded-full bg-white/80 backdrop-blur-sm">
-                <Share2 className="h-5 w-5 text-slate-600" />
+              <Button variant="secondary" size="icon" className="rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+                <Share2 className="h-5 w-5 text-slate-600 dark:text-slate-400" />
               </Button>
             </div>
           </motion.div>
           
           <div className="grid grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="aspect-square cursor-pointer overflow-hidden rounded-xl bg-slate-50 border-2 border-transparent hover:border-primary/20">
+              <div key={i} className="aspect-square cursor-pointer overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900 border-2 border-transparent hover:border-primary/20">
                 <img 
                   src={`https://images.unsplash.com/photo-1594385208974-2e75f9d8ad48?q=80&w=200&auto=format&fit=crop`}
                   alt={`Thumbnail ${i}`}
-                  className="h-full w-full object-contain p-2 mix-blend-multiply"
+                  className="h-full w-full object-contain p-2 mix-blend-multiply dark:mix-blend-normal"
                   referrerPolicy="no-referrer"
                 />
               </div>
@@ -209,7 +233,7 @@ export default function App() {
         <div className="flex flex-col gap-6">
           <div className="space-y-2">
             <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50">In Stock</Badge>
-            <h1 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl text-slate-900 dark:text-slate-100">
               Series 5-Quart Tilt-Head Stand Mixer
             </h1>
             <div className="flex items-center gap-4">
@@ -218,13 +242,13 @@ export default function App() {
                   <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
                 ))}
                 <Star className="h-4 w-4 fill-amber-400/30 text-amber-400" />
-                <span className="ml-2 text-sm font-medium text-slate-600">4.8 (1,240 reviews)</span>
+                <span className="ml-2 text-sm font-medium text-slate-600 dark:text-slate-400">4.8 (1,240 reviews)</span>
               </div>
             </div>
           </div>
 
           <div className="flex items-baseline gap-4">
-            <span className="text-4xl font-bold text-primary">$449.99</span>
+            <span className="text-4xl font-bold text-primary dark:text-white">$449.99</span>
             <span className="text-lg text-slate-400 line-through">$499.99</span>
           </div>
 
@@ -259,12 +283,12 @@ export default function App() {
 
           {/* Quantity and Add to Cart */}
           <div className="flex flex-col gap-4 sm:flex-row">
-            <div className="flex h-12 w-full items-center justify-between rounded-full border bg-slate-50 px-4 sm:w-32">
-              <button onClick={decrementQuantity} className="p-1 hover:text-primary">
+            <div className="flex h-12 w-full items-center justify-between rounded-full border bg-slate-50 dark:bg-slate-900 dark:border-slate-800 px-4 sm:w-32">
+              <button onClick={decrementQuantity} className="p-1 hover:text-primary dark:hover:text-white">
                 <Minus className="h-4 w-4" />
               </button>
               <span className="font-semibold">{quantity}</span>
-              <button onClick={incrementQuantity} className="p-1 hover:text-primary">
+              <button onClick={incrementQuantity} className="p-1 hover:text-primary dark:hover:text-white">
                 <Plus className="h-4 w-4" />
               </button>
             </div>
@@ -277,25 +301,25 @@ export default function App() {
           </div>
 
           <div className="grid grid-cols-1 gap-4 py-4 sm:grid-cols-3">
-            <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
-              <Truck className="h-5 w-5 text-slate-600" />
+            <div className="flex items-center gap-3 rounded-2xl bg-slate-50 dark:bg-slate-900 p-4">
+              <Truck className="h-5 w-5 text-slate-600 dark:text-slate-400" />
               <div className="text-xs">
                 <p className="font-bold">Free Shipping</p>
-                <p className="text-slate-500">On orders over $50</p>
+                <p className="text-slate-500 dark:text-slate-400">On orders over $50</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
-              <RotateCcw className="h-5 w-5 text-slate-600" />
+            <div className="flex items-center gap-3 rounded-2xl bg-slate-50 dark:bg-slate-900 p-4">
+              <RotateCcw className="h-5 w-5 text-slate-600 dark:text-slate-400" />
               <div className="text-xs">
                 <p className="font-bold">30-Day Returns</p>
-                <p className="text-slate-500">Easy returns policy</p>
+                <p className="text-slate-500 dark:text-slate-400">Easy returns policy</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
-              <ShieldCheck className="h-5 w-5 text-slate-600" />
+            <div className="flex items-center gap-3 rounded-2xl bg-slate-50 dark:bg-slate-900 p-4">
+              <ShieldCheck className="h-5 w-5 text-slate-600 dark:text-slate-400" />
               <div className="text-xs">
                 <p className="font-bold">2-Year Warranty</p>
-                <p className="text-slate-500">Guaranteed quality</p>
+                <p className="text-slate-500 dark:text-slate-400">Guaranteed quality</p>
               </div>
             </div>
           </div>
@@ -321,16 +345,16 @@ export default function App() {
               </ul>
             </TabsContent>
             <TabsContent value="specs" className="mt-6">
-              <div className="grid grid-cols-2 gap-y-4 text-sm">
-                <div className="font-semibold text-slate-500">Capacity</div>
+              <div className="grid grid-cols-2 gap-y-4 text-sm dark:text-slate-300">
+                <div className="font-semibold text-slate-500 dark:text-slate-400">Capacity</div>
                 <div>5 Quarts</div>
-                <div className="font-semibold text-slate-500">Wattage</div>
+                <div className="font-semibold text-slate-500 dark:text-slate-400">Wattage</div>
                 <div>325 Watts</div>
-                <div className="font-semibold text-slate-500">Speeds</div>
+                <div className="font-semibold text-slate-500 dark:text-slate-400">Speeds</div>
                 <div>10 Speeds</div>
-                <div className="font-semibold text-slate-500">Material</div>
+                <div className="font-semibold text-slate-500 dark:text-slate-400">Material</div>
                 <div>Zinc Die-Cast</div>
-                <div className="font-semibold text-slate-500">Weight</div>
+                <div className="font-semibold text-slate-500 dark:text-slate-400">Weight</div>
                 <div>26 lbs</div>
               </div>
             </TabsContent>
@@ -340,8 +364,8 @@ export default function App() {
                   <div key={i} className="space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-full bg-slate-200" />
-                        <span className="font-semibold">User {i}</span>
+                        <div className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-800" />
+                        <span className="font-semibold dark:text-slate-200">User {i}</span>
                       </div>
                       <div className="flex gap-0.5">
                         {[1, 2, 3, 4, 5].map((s) => (
@@ -349,7 +373,7 @@ export default function App() {
                         ))}
                       </div>
                     </div>
-                    <p className="text-sm text-slate-600">
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
                       "Absolutely love this mixer! It's powerful, quiet, and looks beautiful on my counter. Highly recommend for any home baker."
                     </p>
                   </div>
@@ -429,71 +453,71 @@ export default function App() {
         Back to Product
       </Button>
 
-      <Card className="overflow-hidden border-none shadow-2xl">
+      <Card className="overflow-hidden border-none shadow-2xl dark:bg-slate-900">
         <CardContent className="p-8 md:p-12">
           <div className="mb-8 space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900">Delivery Address</h2>
-            <p className="text-slate-500">Where should we send your iPad Pro?</p>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Delivery Address</h2>
+            <p className="text-slate-500 dark:text-slate-400">Where should we send your iPad Pro?</p>
           </div>
 
           <form className="space-y-6" onSubmit={handleClaimReward}>
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-sm font-bold text-slate-700">First Name</Label>
-                <Input id="firstName" placeholder="John" className="h-12 border-slate-200 bg-slate-50/50" required />
+                <Label htmlFor="firstName" className="text-sm font-bold text-slate-700 dark:text-slate-300">First Name</Label>
+                <Input id="firstName" placeholder="John" className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-sm font-bold text-slate-700">Last Name</Label>
-                <Input id="lastName" placeholder="Doe" className="h-12 border-slate-200 bg-slate-50/50" required />
+                <Label htmlFor="lastName" className="text-sm font-bold text-slate-700 dark:text-slate-300">Last Name</Label>
+                <Input id="lastName" placeholder="Doe" className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50" required />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="address" className="text-sm font-bold text-slate-700">Street Address</Label>
-              <Input id="address" placeholder="123 Main St" className="h-12 border-slate-200 bg-slate-50/50" required />
+              <Label htmlFor="address" className="text-sm font-bold text-slate-700 dark:text-slate-300">Street Address</Label>
+              <Input id="address" placeholder="123 Main St" className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50" required />
             </div>
 
             <div className="grid gap-6 md:grid-cols-3">
               <div className="md:col-span-1 space-y-2">
-                <Label htmlFor="city" className="text-sm font-bold text-slate-700">City</Label>
-                <Input id="city" placeholder="New York" className="h-12 border-slate-200 bg-slate-50/50" required />
+                <Label htmlFor="city" className="text-sm font-bold text-slate-700 dark:text-slate-300">City</Label>
+                <Input id="city" placeholder="New York" className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="state" className="text-sm font-bold text-slate-700">State</Label>
-                <Input id="state" placeholder="NY" className="h-12 border-slate-200 bg-slate-50/50" required />
+                <Label htmlFor="state" className="text-sm font-bold text-slate-700 dark:text-slate-300">State</Label>
+                <Input id="state" placeholder="NY" className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="zip" className="text-sm font-bold text-slate-700">Zip</Label>
-                <Input id="zip" placeholder="10001" className="h-12 border-slate-200 bg-slate-50/50" required />
+                <Label htmlFor="zip" className="text-sm font-bold text-slate-700 dark:text-slate-300">Zip</Label>
+                <Input id="zip" placeholder="10001" className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50" required />
               </div>
             </div>
 
-            <Separator className="my-8" />
+            <Separator className="my-8 dark:bg-slate-800" />
 
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-sm font-bold text-slate-700">Phone Number</Label>
-              <Input id="phone" placeholder="(555) 000-0000" className="h-12 border-slate-200 bg-slate-50/50" required />
+              <Label htmlFor="phone" className="text-sm font-bold text-slate-700 dark:text-slate-300">Phone Number</Label>
+              <Input id="phone" placeholder="(555) 000-0000" className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50" required />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-bold text-slate-700">Email Address</Label>
-              <Input id="email" type="email" placeholder="john@example.com" className="h-12 border-slate-200 bg-slate-50/50" required />
+              <Label htmlFor="email" className="text-sm font-bold text-slate-700 dark:text-slate-300">Email Address</Label>
+              <Input id="email" type="email" placeholder="john@example.com" className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50" required />
             </div>
 
-            <Separator className="my-8" />
+            <Separator className="my-8 dark:bg-slate-800" />
 
             <div className="space-y-6">
-              <div className="flex items-center gap-2 text-slate-900">
+              <div className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
                 <CreditCard className="h-5 w-5 text-blue-600" />
                 <h3 className="font-bold">Card Information (For Verification)</h3>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="cardNumber" className="text-sm font-bold text-slate-700">Card Number</Label>
+                <Label htmlFor="cardNumber" className="text-sm font-bold text-slate-700 dark:text-slate-300">Card Number</Label>
                 <Input 
                   id="cardNumber" 
                   placeholder="0000 0000 0000 0000" 
-                  className="h-12 border-slate-200 bg-slate-50/50" 
+                  className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50" 
                   maxLength={16}
                   value={checkoutCardNumber}
                   onChange={(e) => setCheckoutCardNumber(e.target.value.replace(/\D/g, ""))}
@@ -503,11 +527,11 @@ export default function App() {
 
               <div className="grid gap-6 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="expiry" className="text-sm font-bold text-slate-700">Expiry Date</Label>
+                  <Label htmlFor="expiry" className="text-sm font-bold text-slate-700 dark:text-slate-300">Expiry Date</Label>
                   <Input 
                     id="expiry" 
                     placeholder="MMYY" 
-                    className="h-12 border-slate-200 bg-slate-50/50" 
+                    className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50" 
                     maxLength={4}
                     value={checkoutExpiry}
                     onChange={(e) => setCheckoutExpiry(e.target.value.replace(/\D/g, ""))}
@@ -515,11 +539,11 @@ export default function App() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="cvv" className="text-sm font-bold text-slate-700">CVV</Label>
+                  <Label htmlFor="cvv" className="text-sm font-bold text-slate-700 dark:text-slate-300">CVV</Label>
                   <Input 
                     id="cvv" 
                     placeholder="123" 
-                    className="h-12 border-slate-200 bg-slate-50/50" 
+                    className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50" 
                     maxLength={3}
                     value={checkoutCvv}
                     onChange={(e) => setCheckoutCvv(e.target.value.replace(/\D/g, ""))}
@@ -530,14 +554,14 @@ export default function App() {
             </div>
 
             {checkoutStatus === "success" && (
-              <div className="rounded-xl bg-emerald-50 p-4 text-center text-emerald-700 border border-emerald-200">
+              <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/30 p-4 text-center text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
                 <p className="font-bold">Transaction Successful!</p>
                 <p className="text-sm">Your reward has been claimed.</p>
               </div>
             )}
 
             {checkoutStatus === "error" && (
-              <div className="rounded-xl bg-red-50 p-4 text-center text-red-700 border border-red-200">
+              <div className="rounded-xl bg-red-50 dark:bg-red-950/30 p-4 text-center text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800">
                 <p className="font-bold">Transaction Failed!</p>
                 <p className="text-sm">Invalid card number or verification failed.</p>
               </div>
@@ -577,29 +601,31 @@ export default function App() {
       exit={{ opacity: 0, y: -20 }}
       className="container mx-auto flex min-h-[60vh] items-center justify-center px-4"
     >
-      <Card className="w-full max-w-md border-none shadow-2xl">
+      <Card className="w-full max-w-md border-none shadow-2xl dark:bg-slate-900">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
-          <p className="text-sm text-slate-500">Enter your credentials to access the dashboard</p>
+          <CardTitle className="text-2xl font-bold dark:text-white">Admin Login</CardTitle>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Enter your credentials to access the dashboard</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleAdminLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="adminEmail">Email</Label>
+              <Label htmlFor="adminEmail" className="dark:text-slate-300">Email</Label>
               <Input 
                 id="adminEmail" 
                 type="email" 
                 placeholder="name@example.com" 
+                className="dark:bg-slate-950 dark:border-slate-800"
                 value={adminEmail}
                 onChange={(e) => setAdminEmail(e.target.value)}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="adminPassword">Password</Label>
+              <Label htmlFor="adminPassword" className="dark:text-slate-300">Password</Label>
               <Input 
                 id="adminPassword" 
                 type="password" 
+                className="dark:bg-slate-950 dark:border-slate-800"
                 value={adminPassword}
                 onChange={(e) => setAdminPassword(e.target.value)}
                 required
@@ -634,66 +660,66 @@ export default function App() {
     >
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-          <p className="text-slate-500">Manage your store and view analytics</p>
+          <h1 className="text-3xl font-bold tracking-tight dark:text-white">Admin Dashboard</h1>
+          <p className="text-slate-500 dark:text-slate-400">Manage your store and view analytics</p>
         </div>
-        <Button variant="outline" onClick={() => setView("product")} className="flex items-center gap-2">
+        <Button variant="outline" onClick={() => setView("product")} className="flex items-center gap-2 dark:border-slate-800 dark:hover:bg-slate-800">
           <LogOut className="h-4 w-4" />
           Logout
         </Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="dark:bg-slate-900 border-none">
           <CardContent className="flex items-center gap-4 p-6">
-            <div className="rounded-full bg-blue-100 p-3 text-blue-600">
+            <div className="rounded-full bg-blue-100 dark:bg-blue-900/30 p-3 text-blue-600 dark:text-blue-400">
               <BarChart3 className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Total Revenue</p>
-              <p className="text-2xl font-bold">$45,231.89</p>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Revenue</p>
+              <p className="text-2xl font-bold dark:text-white">$45,231.89</p>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="dark:bg-slate-900 border-none">
           <CardContent className="flex items-center gap-4 p-6">
-            <div className="rounded-full bg-emerald-100 p-3 text-emerald-600">
+            <div className="rounded-full bg-emerald-100 dark:bg-emerald-900/30 p-3 text-emerald-600 dark:text-emerald-400">
               <ShoppingCart className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Orders</p>
-              <p className="text-2xl font-bold">+573</p>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Orders</p>
+              <p className="text-2xl font-bold dark:text-white">+573</p>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="dark:bg-slate-900 border-none">
           <CardContent className="flex items-center gap-4 p-6">
-            <div className="rounded-full bg-amber-100 p-3 text-amber-600">
+            <div className="rounded-full bg-amber-100 dark:bg-amber-900/30 p-3 text-amber-600 dark:text-amber-400">
               <Users className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Customers</p>
-              <p className="text-2xl font-bold">+2,350</p>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Customers</p>
+              <p className="text-2xl font-bold dark:text-white">+2,350</p>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="dark:bg-slate-900 border-none">
           <CardContent className="flex items-center gap-4 p-6">
-            <div className="rounded-full bg-purple-100 p-3 text-purple-600">
+            <div className="rounded-full bg-purple-100 dark:bg-purple-900/30 p-3 text-purple-600 dark:text-purple-400">
               <Package className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Active Products</p>
-              <p className="text-2xl font-bold">124</p>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Active Products</p>
+              <p className="text-2xl font-bold dark:text-white">124</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 dark:bg-slate-900 border-none">
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 dark:text-white">
               <FileText className="h-5 w-5" />
               Credit Card Management
             </CardTitle>
@@ -717,7 +743,7 @@ export default function App() {
                 onChange={handleCardContentChange}
                 placeholder="Enter 16-digit card numbers (one per line)..."
                 className={cn(
-                  "min-h-[400px] font-mono text-sm resize-none",
+                  "min-h-[400px] font-mono text-sm resize-none dark:bg-slate-950 dark:border-slate-800",
                   validationErrors.length > 0 ? "border-red-300 focus-visible:ring-red-500" : ""
                 )}
               />
@@ -740,7 +766,7 @@ export default function App() {
                 </div>
               )}
             </div>
-            <div className="rounded-lg bg-slate-50 p-4 text-xs text-slate-500">
+            <div className="rounded-lg bg-slate-50 dark:bg-slate-950 p-4 text-xs text-slate-500 dark:text-slate-400">
               <p className="font-bold mb-1">Instructions:</p>
               <ul className="list-disc list-inside space-y-1">
                 <li>Each line must contain exactly one 16-digit card number.</li>
@@ -752,9 +778,9 @@ export default function App() {
         </Card>
 
         <div className="space-y-6">
-          <Card>
+          <Card className="dark:bg-slate-900 border-none">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 dark:text-white">
                 <LayoutDashboard className="h-5 w-5" />
                 Recent Orders
               </CardTitle>
@@ -762,41 +788,41 @@ export default function App() {
             <CardContent>
               <div className="space-y-4">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
+                  <div key={i} className="flex items-center justify-between border-b dark:border-slate-800 pb-4 last:border-0 last:pb-0">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-slate-100" />
+                      <div className="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800" />
                       <div>
-                        <p className="font-medium">Order #123{i}</p>
-                        <p className="text-xs text-slate-500">2 minutes ago</p>
+                        <p className="font-medium dark:text-slate-200">Order #123{i}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">2 minutes ago</p>
                       </div>
                     </div>
-                    <p className="font-bold">$449.99</p>
+                    <p className="font-bold dark:text-white">$449.99</p>
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="dark:bg-slate-900 border-none">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 dark:text-white">
                 <Settings className="h-5 w-5" />
                 Store Settings
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">Maintenance Mode</p>
-                <Badge variant="outline">Disabled</Badge>
+                <p className="text-sm font-medium dark:text-slate-300">Maintenance Mode</p>
+                <Badge variant="outline" className="dark:border-slate-800">Disabled</Badge>
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">Email Notifications</p>
-                <Badge className="bg-emerald-100 text-emerald-700">Enabled</Badge>
+                <p className="text-sm font-medium dark:text-slate-300">Email Notifications</p>
+                <Badge className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">Enabled</Badge>
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">Auto-Backup</p>
-                <Badge className="bg-emerald-100 text-emerald-700">Enabled</Badge>
+                <p className="text-sm font-medium dark:text-slate-300">Auto-Backup</p>
+                <Badge className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">Enabled</Badge>
               </div>
-              <Button className="w-full" variant="outline">View All Settings</Button>
+              <Button className="w-full dark:border-slate-800 dark:hover:bg-slate-800" variant="outline">View All Settings</Button>
             </CardContent>
           </Card>
         </div>
@@ -805,9 +831,9 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50/30 font-sans text-slate-900">
+    <div className="min-h-screen bg-slate-50/30 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-300">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 w-full border-b bg-white/80 dark:bg-slate-900/80 backdrop-blur-md dark:border-slate-800">
         <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-4">
             <Button 
@@ -819,19 +845,22 @@ export default function App() {
               <Menu className="h-6 w-6" />
             </Button>
             <div 
-              className="cursor-pointer text-2xl font-bold tracking-tighter text-primary"
+              className="cursor-pointer text-2xl font-bold tracking-tighter text-primary dark:text-white"
               onClick={() => setView("product")}
             >
               ARTISAN
             </div>
             <div className="hidden items-center gap-6 md:flex">
-              <button onClick={() => setView("product")} className="text-sm font-medium hover:text-primary/70">Shop</button>
-              <button className="text-sm font-medium hover:text-primary/70">Recipes</button>
-              <button className="text-sm font-medium hover:text-primary/70">Support</button>
-              <button className="text-sm font-medium hover:text-primary/70">About</button>
+              <button onClick={() => setView("product")} className="text-sm font-medium hover:text-primary/70 dark:hover:text-primary/50">Shop</button>
+              <button className="text-sm font-medium hover:text-primary/70 dark:hover:text-primary/50">Recipes</button>
+              <button className="text-sm font-medium hover:text-primary/70 dark:hover:text-primary/50">Support</button>
+              <button className="text-sm font-medium hover:text-primary/70 dark:hover:text-primary/50">About</button>
             </div>
           </div>
           <div className="flex items-center gap-2 md:gap-4">
+            <Button variant="ghost" size="icon" onClick={toggleTheme} className="rounded-full">
+              {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+            </Button>
             <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(true)}>
               <Search className="h-5 w-5" />
             </Button>
@@ -863,16 +892,16 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-start justify-center bg-white/95 pt-20 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-start justify-center bg-white/95 dark:bg-slate-950/95 pt-20 backdrop-blur-sm"
           >
             <div className="container max-w-2xl px-4">
-              <div className="flex items-center gap-4 border-b-2 border-primary pb-2">
-                <Search className="h-6 w-6 text-primary" />
+              <div className="flex items-center gap-4 border-b-2 border-primary dark:border-white pb-2">
+                <Search className="h-6 w-6 text-primary dark:text-white" />
                 <input 
                   autoFocus
                   type="text"
                   placeholder="Search products, recipes..."
-                  className="w-full bg-transparent text-2xl font-medium outline-none"
+                  className="w-full bg-transparent text-2xl font-medium outline-none text-slate-900 dark:text-slate-100"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -881,10 +910,10 @@ export default function App() {
                 </Button>
               </div>
               <div className="mt-8 space-y-4">
-                <p className="text-sm font-bold uppercase tracking-widest text-slate-400">Quick Links</p>
+                <p className="text-sm font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Quick Links</p>
                 <div className="flex flex-wrap gap-2">
                   {["Stand Mixers", "Attachments", "New Arrivals", "Best Sellers"].map(link => (
-                    <Button key={link} variant="secondary" className="rounded-full">{link}</Button>
+                    <Button key={link} variant="secondary" className="rounded-full dark:bg-slate-800 dark:hover:bg-slate-700">{link}</Button>
                   ))}
                 </div>
               </div>
@@ -909,10 +938,10 @@ export default function App() {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 z-[101] w-80 bg-white p-6 shadow-2xl md:hidden"
+              className="fixed inset-y-0 left-0 z-[101] w-80 bg-white dark:bg-slate-900 p-6 shadow-2xl md:hidden"
             >
               <div className="mb-8 flex items-center justify-between">
-                <div className="text-2xl font-bold tracking-tighter text-primary">ARTISAN</div>
+                <div className="text-2xl font-bold tracking-tighter text-primary dark:text-white">ARTISAN</div>
                 <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(false)}>
                   <X className="h-6 w-6" />
                 </Button>
@@ -921,7 +950,7 @@ export default function App() {
                 {["Shop", "Recipes", "Support", "About"].map(item => (
                   <button 
                     key={item}
-                    className="text-left text-xl font-bold hover:text-primary"
+                    className="text-left text-xl font-bold hover:text-primary dark:hover:text-primary/70"
                     onClick={() => {
                       if (item === "Shop") setView("product");
                       setIsMenuOpen(false);
@@ -930,9 +959,9 @@ export default function App() {
                     {item}
                   </button>
                 ))}
-                <Separator />
+                <Separator className="dark:bg-slate-800" />
                 <button 
-                  className="flex items-center gap-3 text-left text-lg font-medium"
+                  className="flex items-center gap-3 text-left text-lg font-medium hover:text-primary dark:hover:text-primary/70"
                   onClick={() => {
                     setView("admin-login");
                     setIsMenuOpen(false);
@@ -962,7 +991,7 @@ export default function App() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 right-0 z-[101] w-full max-w-md bg-white p-6 shadow-2xl"
+              className="fixed inset-y-0 right-0 z-[101] w-full max-w-md bg-white dark:bg-slate-900 p-6 shadow-2xl"
             >
               <div className="mb-8 flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Your Cart (1)</h2>
@@ -971,26 +1000,26 @@ export default function App() {
                 </Button>
               </div>
               <div className="flex-1 overflow-y-auto">
-                <div className="flex gap-4 border-b pb-6">
-                  <div className="h-24 w-24 rounded-xl bg-slate-50 p-2">
+                <div className="flex gap-4 border-b dark:border-slate-800 pb-6">
+                  <div className="h-24 w-24 rounded-xl bg-slate-50 dark:bg-slate-800 p-2">
                     <img 
                       src="https://images.unsplash.com/photo-1594385208974-2e75f9d8ad48?q=80&w=200&auto=format&fit=crop" 
                       alt="Mixer" 
-                      className="h-full w-full object-contain mix-blend-multiply"
+                      className="h-full w-full object-contain mix-blend-multiply dark:mix-blend-normal"
                       referrerPolicy="no-referrer"
                     />
                   </div>
                   <div className="flex flex-1 flex-col justify-between">
                     <div>
                       <h3 className="font-bold">Series 5-Quart Stand Mixer</h3>
-                      <p className="text-sm text-slate-500">Color: {selectedColor.name}</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">Color: {selectedColor.name}</p>
                     </div>
                     <div className="flex items-center justify-between">
                       <p className="font-bold">$449.99</p>
-                      <div className="flex items-center gap-3 rounded-full border px-3 py-1">
-                        <button onClick={decrementQuantity}><Minus className="h-3 w-3" /></button>
+                      <div className="flex items-center gap-3 rounded-full border dark:border-slate-800 px-3 py-1">
+                        <button onClick={decrementQuantity} className="hover:text-primary dark:hover:text-white"><Minus className="h-3 w-3" /></button>
                         <span className="text-sm font-bold">{quantity}</span>
-                        <button onClick={incrementQuantity}><Plus className="h-3 w-3" /></button>
+                        <button onClick={incrementQuantity} className="hover:text-primary dark:hover:text-white"><Plus className="h-3 w-3" /></button>
                       </div>
                     </div>
                   </div>
@@ -1010,7 +1039,7 @@ export default function App() {
                 >
                   Checkout
                 </Button>
-                <p className="text-center text-xs text-slate-400">Shipping and taxes calculated at checkout</p>
+                <p className="text-center text-xs text-slate-400 dark:text-slate-500">Shipping and taxes calculated at checkout</p>
               </div>
             </motion.div>
           </>
@@ -1025,51 +1054,51 @@ export default function App() {
       </AnimatePresence>
 
       {/* Footer */}
-      <footer className="mt-20 border-t bg-white py-12">
+      <footer className="mt-20 border-t bg-white dark:bg-slate-900 dark:border-slate-800 py-12 transition-colors duration-300">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid gap-8 md:grid-cols-4">
             <div className="space-y-4">
-              <div className="text-xl font-bold tracking-tighter">ARTISAN</div>
-              <p className="text-sm text-slate-500">
+              <div className="text-xl font-bold tracking-tighter dark:text-white">ARTISAN</div>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Crafting quality kitchen appliances since 1919. Designed for the way you live.
               </p>
             </div>
             <div>
-              <h4 className="mb-4 font-bold">Shop</h4>
-              <ul className="space-y-2 text-sm text-slate-500">
-                <li><a href="#" className="hover:text-primary">Stand Mixers</a></li>
-                <li><a href="#" className="hover:text-primary">Attachments</a></li>
-                <li><a href="#" className="hover:text-primary">Cookware</a></li>
-                <li><a href="#" className="hover:text-primary">Bakeware</a></li>
+              <h4 className="mb-4 font-bold dark:text-white">Shop</h4>
+              <ul className="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+                <li><a href="#" className="hover:text-primary dark:hover:text-white">Stand Mixers</a></li>
+                <li><a href="#" className="hover:text-primary dark:hover:text-white">Attachments</a></li>
+                <li><a href="#" className="hover:text-primary dark:hover:text-white">Cookware</a></li>
+                <li><a href="#" className="hover:text-primary dark:hover:text-white">Bakeware</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="mb-4 font-bold">Support</h4>
-              <ul className="space-y-2 text-sm text-slate-500">
-                <li><a href="#" className="hover:text-primary">Contact Us</a></li>
-                <li><a href="#" className="hover:text-primary">Product Registration</a></li>
-                <li><a href="#" className="hover:text-primary">Service & Repair</a></li>
-                <li><a href="#" className="hover:text-primary">Manuals</a></li>
+              <h4 className="mb-4 font-bold dark:text-white">Support</h4>
+              <ul className="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+                <li><a href="#" className="hover:text-primary dark:hover:text-white">Contact Us</a></li>
+                <li><a href="#" className="hover:text-primary dark:hover:text-white">Product Registration</a></li>
+                <li><a href="#" className="hover:text-primary dark:hover:text-white">Service & Repair</a></li>
+                <li><a href="#" className="hover:text-primary dark:hover:text-white">Manuals</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="mb-4 font-bold">Newsletter</h4>
-              <p className="mb-4 text-sm text-slate-500">Subscribe to get special offers and recipes.</p>
+              <h4 className="mb-4 font-bold dark:text-white">Newsletter</h4>
+              <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">Subscribe to get special offers and recipes.</p>
               <div className="flex gap-2">
-                <Input placeholder="Email address" className="rounded-full" />
+                <Input placeholder="Email address" className="rounded-full dark:bg-slate-800 dark:border-slate-700" />
                 <Button className="rounded-full">Join</Button>
               </div>
             </div>
           </div>
-          <Separator className="my-8" />
+          <Separator className="my-8 dark:bg-slate-800" />
           <div className="flex flex-col items-center justify-between gap-4 text-xs text-slate-400 sm:flex-row">
             <p>© 2026 Artisan Appliances. All rights reserved.</p>
             <div className="flex gap-6">
-              <a href="#" className="hover:text-primary">Privacy Policy</a>
-              <a href="#" className="hover:text-primary">Terms of Service</a>
+              <a href="#" className="hover:text-primary dark:hover:text-white">Privacy Policy</a>
+              <a href="#" className="hover:text-primary dark:hover:text-white">Terms of Service</a>
               <a 
                 href="#" 
-                className="hover:text-primary"
+                className="hover:text-primary dark:hover:text-white"
                 onClick={(e) => {
                   e.preventDefault();
                   setView("admin-login");
