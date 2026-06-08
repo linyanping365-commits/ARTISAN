@@ -295,8 +295,8 @@ export default function App() {
           </div>
 
           <div className="flex items-baseline gap-4">
-            <span className="text-4xl font-bold text-primary dark:text-white">$449.99</span>
-            <span className="text-lg text-slate-400 line-through">$499.99</span>
+            <span className="text-4xl font-bold text-primary dark:text-white">$9.99</span>
+            <span className="text-lg text-slate-400 line-through">$19.99</span>
           </div>
 
           <Separator />
@@ -846,7 +846,7 @@ export default function App() {
                         <p className="text-xs text-slate-500 dark:text-slate-400">2 minutes ago</p>
                       </div>
                     </div>
-                    <p className="font-bold dark:text-white">$449.99</p>
+                    <p className="font-bold dark:text-white">$9.99</p>
                   </div>
                 ))}
               </div>
@@ -1065,7 +1065,7 @@ export default function App() {
                       <p className="text-sm text-slate-500 dark:text-slate-400">Color: {selectedColor.name}</p>
                     </div>
                     <div className="flex items-center justify-between">
-                      <p className="font-bold">$449.99</p>
+                      <p className="font-bold">$9.99</p>
                       <div className="flex items-center gap-3 rounded-full border dark:border-slate-800 px-3 py-1">
                         <button onClick={decrementQuantity} className="hover:text-primary dark:hover:text-white"><Minus className="h-3 w-3" /></button>
                         <span className="text-sm font-bold">{quantity}</span>
@@ -1078,7 +1078,7 @@ export default function App() {
               <div className="mt-auto pt-6 space-y-4">
                 <div className="flex items-center justify-between text-lg font-bold">
                   <span>Subtotal</span>
-                  <span>${(449.99 * quantity).toFixed(2)}</span>
+                  <span>${(9.99 * quantity).toFixed(2)}</span>
                 </div>
                 <Button 
                   className="h-14 w-full rounded-xl text-lg font-bold"
