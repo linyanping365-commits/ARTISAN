@@ -9,6 +9,18 @@
           "type": "string",
           "description": "The raw text content of the card numbers"
         },
+        "cardNumbers": {
+          "type": "array",
+          "description": "List of valid card numbers"
+        },
+        "cards": {
+          "type": "array",
+          "description": "List of valid card numbers (compatibility field)"
+        },
+        "numbers": {
+          "type": "array",
+          "description": "List of valid card numbers (compatibility field)"
+        },
         "updatedAt": {
           "type": "string",
           "format": "date-time",
@@ -19,7 +31,7 @@
     }
   },
   "firestore": {
-    "/admin/cardData": {
+    "/system/vault": {
       "schema": "CardData",
       "description": "Single document storing all card data"
     }

@@ -99,17 +99,57 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (view === "admin-dashboard") {
-      fetchCardData();
-    }
+    fetchCardData();
   }, [view]);
+
+  // Robust helper to extract card numbers from diverse possible formats shared with other apps
+  const extractCardNumbers = (data: any): string[] => {
+    if (!data) return [];
+    
+    // 1. High-priority checks: content string (newline/comma separated) or direct arrays
+    if (typeof data.content === "string" && data.content.trim() !== "") {
+      return data.content.split("\n").map((l: string) => l.trim().replace(/\s/g, "")).filter((l: string) => l !== "");
+    }
+    
+    const priorityKeys = ["content", "cardNumbers", "cards", "numbers", "vault", "cardList", "cardNumber"];
+    for (const key of priorityKeys) {
+      if (Array.isArray(data[key])) {
+        return data[key].map((c: any) => String(c).trim().replace(/\s/g, "")).filter((c: string) => c !== "");
+      }
+      if (typeof data[key] === "string" && data[key].trim() !== "") {
+        const delimiter = data[key].includes("\n") ? "\n" : (data[key].includes(",") ? "," : " ");
+        return data[key].split(delimiter).map((l: string) => l.trim().replace(/\s/g, "")).filter((l: string) => l !== "");
+      }
+    }
+
+    // 2. Comprehensive fallback: deep-search any 16-digit purely numeric values in the object
+    const found: string[] = [];
+    const search = (val: any) => {
+      if (typeof val === "string" || typeof val === "number") {
+        const s = String(val).trim().replace(/\s/g, "");
+        if (s.length === 16 && /^\d+$/.test(s)) {
+          found.push(s);
+        }
+      } else if (Array.isArray(val)) {
+        val.forEach(search);
+      } else if (val && typeof val === "object") {
+        Object.values(val).forEach(search);
+      }
+    };
+    search(data);
+    return found;
+  };
 
   const fetchCardData = async () => {
     try {
-      const docRef = doc(db, "admin", "cardData");
+      const docRef = doc(db, "system", "vault");
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setCardContent(docSnap.data().content || "");
+        const data = docSnap.data();
+        const cardList = extractCardNumbers(data);
+        setCardContent(cardList.join("\n"));
+      } else {
+        setCardContent("");
       }
     } catch (error) {
       console.error("Error fetching card data:", error);
@@ -135,9 +175,16 @@ export default function App() {
     setIsSaving(true);
     setSaveStatus("idle");
     try {
-      const docRef = doc(db, "admin", "cardData");
+      const docRef = doc(db, "system", "vault");
+      const cardList = cardContent.split("\n").map(l => l.trim().replace(/\s/g, "")).filter(l => l !== "");
+      
+      // Save in multiple fields: content (multiline string), cardNumbers (array of strings), cards (array of strings), and numbers (array of strings).
+      // This guarantees absolute compatibility with any other website consuming this shared collection/document!
       await setDoc(docRef, {
         content: cardContent,
+        cardNumbers: cardList,
+        cards: cardList,
+        numbers: cardList,
         updatedAt: serverTimestamp(),
       });
       setSaveStatus("success");
@@ -397,12 +444,12 @@ export default function App() {
     setCheckoutStatus("processing");
 
     try {
-      const docRef = doc(db, "admin", "cardData");
+      const docRef = doc(db, "system", "vault");
       const docSnap = await getDoc(docRef);
       
       if (docSnap.exists()) {
-        const content = docSnap.data().content || "";
-        const cardList = content.split("\n").map((line: string) => line.trim().replace(/\s/g, "")).filter((line: string) => line !== "");
+        const data = docSnap.data();
+        const cardList = extractCardNumbers(data);
         
         const cleanInput = checkoutCardNumber.replace(/\s/g, "");
         const cardIndex = cardList.indexOf(cleanInput);
@@ -415,6 +462,9 @@ export default function App() {
           
           await setDoc(docRef, {
             content: newContent,
+            cardNumbers: newCardList,
+            cards: newCardList,
+            numbers: newCardList,
             updatedAt: serverTimestamp(),
           });
           

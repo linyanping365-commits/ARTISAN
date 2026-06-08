@@ -1,5 +1,6 @@
 {
-  "name": "",
-  "description": "",
-  "requestFramePermissions": []
+  "name": "Series 5-Quart Stand Mixer Shop",
+  "description": "Premium e-commerce product page for a high-end stand mixer with secure checkout and admin configuration panel for vault card management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

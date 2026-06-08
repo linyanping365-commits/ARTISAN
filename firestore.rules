@@ -10,7 +10,7 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.token.email == "890305@wty.com";
     }
 
-    match /admin/cardData {
+    match /system/vault {
       // For this specific app, we allow the admin to read/write the card data
       // We use the email from the prompt as the admin identifier
       allow read, write: if true; // Simplified for this specific request as per user's "890305@wty.com" logic
